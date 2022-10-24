@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
 using OneOf;
 using System.ComponentModel;
+using BlazorComponent.Applicationable;
 
 namespace Masa.Blazor
 {
@@ -8,7 +9,7 @@ namespace Masa.Blazor
     {
         private readonly string[] _applicationProperties = new string[]
         {
-            "Bottom","Footer","Bar","Top"
+            "Bottom", "Footer", "Bar", "Top"
         };
 
         [Parameter]
@@ -29,14 +30,8 @@ namespace Masa.Blazor
         [Parameter]
         public StringNumber Height
         {
-            get
-            {
-                return GetValue<StringNumber>(App ? "100vh" : "100%");
-            }
-            set
-            {
-                SetValue(value);
-            }
+            get { return GetValue<StringNumber>(App ? "100vh" : "100%"); }
+            set { SetValue(value); }
         }
 
         [Parameter]
@@ -57,14 +52,8 @@ namespace Masa.Blazor
         [Parameter]
         public OneOf<Breakpoints, double> MobileBreakpoint
         {
-            get
-            {
-                return GetValue(MasaBlazor.Breakpoint.MobileBreakpoint);
-            }
-            set
-            {
-                SetValue(value);
-            }
+            get => GetValue(MasaBlazor.Breakpoint.MobileBreakpoint);
+            set => SetValue(value);
         }
 
         [Parameter]
@@ -141,10 +130,7 @@ namespace Masa.Blazor
 
         protected StringNumber ComputedWidth
         {
-            get
-            {
-                return IsMiniVariant ? MiniVariantWidth : Width;
-            }
+            get { return IsMiniVariant ? MiniVariantWidth : Width; }
         }
 
         protected bool HasApp => App && (!IsMobile && !Temporary);
@@ -177,26 +163,17 @@ namespace Masa.Blazor
 
         protected bool ReactsToResize
         {
-            get
-            {
-                return !DisableResizeWatcher && !Stateless;
-            }
+            get { return !DisableResizeWatcher && !Stateless; }
         }
 
         protected bool ReactsToMobile
         {
-            get
-            {
-                return App && !DisableResizeWatcher && !Permanent && !Stateless && !Temporary;
-            }
+            get { return App && !DisableResizeWatcher && !Permanent && !Stateless && !Temporary; }
         }
 
         protected bool ReactsToRoute
         {
-            get
-            {
-                return !DisableRouteWatcher && !Stateless && (Temporary || IsMobile);
-            }
+            get { return !DisableRouteWatcher && !Stateless && (Temporary || IsMobile); }
         }
 
         protected override bool IsFullscreen => MasaBlazor.Breakpoint.SmAndDown;
@@ -204,6 +181,8 @@ namespace Masa.Blazor
         protected override void OnInitialized()
         {
             base.OnInitialized();
+            
+            SetApplication(MasaBlazor.Application);
 
             Watcher
                 .Watch<bool>(nameof(Value), val =>
@@ -218,38 +197,14 @@ namespace Masa.Blazor
                         IsActive = val;
                     }
                 })
-                .Watch<bool>(nameof(IsActive), (bool val) =>
+                .Watch<bool>(nameof(ShowOverlay), val =>
                 {
-                    // OverlayRef is not null in the next tick.
-                    NextTick(async () =>
-                    {
-                        if (val)
-                        {
-                            if (ShowOverlay)
-                            {
-                                await HideScroll();
-                            }
-                        }
-                        else
-                        {
-                            if (!ShowOverlay)
-                            {
-                                await ShowScroll();
-                            }
-                        }
+                    _ = val ? HideScroll() : ShowScroll();
 
-                        StateHasChanged();
-                    });
-
-                    //We will remove this when mixins applicationable finished
-                    _ = UpdateApplicationAsync();
-
+                    StateHasChanged();
                 })
                 .Watch<bool>(nameof(ExpandOnHover), val => UpdateMiniVariant(val, false))
-                .Watch<bool>(nameof(IsMouseover), val =>
-                {
-                    UpdateMiniVariant(!val);
-                });
+                .Watch<bool>(nameof(IsMouseover), val => { UpdateMiniVariant(!val); });
 
             Init();
 
@@ -428,30 +383,13 @@ namespace Masa.Blazor
                 });
         }
 
-        protected override async void CallUpdate()
+        protected override TargetProp ApplicationProperty => Right ? TargetProp.Right : TargetProp.Left;
+
+        protected override async Task<double> UpdateApplication()
         {
-            base.CallUpdate();
-
-            await UpdateApplicationAsync();
-
-            StateHasChanged();
-        }
-
-        protected async Task UpdateApplicationAsync()
-        {
-            if (!App)
-            {
-                return;
-            }
-
-            var val = (!IsActive || IsMobile || Temporary)
-                    ? 0
-                    : (ComputedWidth.ToDouble() <= 0 ? await GetClientWidthAsync() : ComputedWidth.ToDouble());
-
-                if (Right)
-                    MasaBlazor.Application.Right = val;
-                else
-                    MasaBlazor.Application.Left = val;
+            return (!IsActive || IsMobile || Temporary)
+                ? 0
+                : (ComputedWidth.ToDouble() <= 0 ? await GetClientWidthAsync() : ComputedWidth.ToDouble());
         }
 
         private async Task<double> GetClientWidthAsync()
@@ -462,7 +400,7 @@ namespace Masa.Blazor
             }
 
             var element = await JsInvokeAsync<BlazorComponent.Web.Element>(
-                   JsInteropConstants.GetDomInfo, Ref);
+                JsInteropConstants.GetDomInfo, Ref);
             return element.ClientWidth;
         }
 

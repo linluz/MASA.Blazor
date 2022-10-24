@@ -1,122 +1,154 @@
 ﻿using System.ComponentModel;
+using BlazorComponent.Applicationable;
 
-namespace Masa.Blazor
+namespace Masa.Blazor;
+
+public class Application : BlazorComponent.Services.IApplication, INotifyPropertyChanged
 {
-    public class Application : INotifyPropertyChanged
+    private double _bar;
+    private double _top;
+    private double _left;
+    private double _insetFooter;
+    private double _right;
+    private double _bottom;
+    private double _footer;
+    private bool _isBooted;
+
+    public double Bar
     {
-        private double _bar;
-        private double _top;
-        private double _left;
-        private double _insetFooter;
-        private double _right;
-        private double _bottom;
-        private double _footer;
-        private bool _isBooted;
-
-        public double Bar
+        get => _bar;
+        internal set
         {
-            get => _bar;
-            internal set
+            if (_bar != value)
             {
-                if (_bar != value)
-                {
-                    _bar = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Bar)));
-                }
+                _bar = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Bar)));
             }
         }
+    }
 
-        public double Top
+    public double Top
+    {
+        get => _top;
+        internal set
         {
-            get => _top;
-            internal set
+            if (_top != value)
             {
-                if (_top != value)
-                {
-                    _top = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Top)));
-                }
+                _top = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Top)));
             }
         }
+    }
 
-        public double Left
+    public double Left
+    {
+        get => _left;
+        internal set
         {
-            get => _left;
-            internal set
+            if (_left != value)
             {
-                if (_left != value)
-                {
-                    _left = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Left)));
-                }
+                _left = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Left)));
             }
         }
+    }
 
-        public double InsetFooter
+    public double InsetFooter
+    {
+        get => _insetFooter;
+        internal set
         {
-            get => _insetFooter;
-            internal set
+            if (_insetFooter != value)
             {
-                if (_insetFooter != value)
-                {
-                    _insetFooter = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InsetFooter)));
-                }
+                _insetFooter = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(InsetFooter)));
             }
         }
+    }
 
-        public double Right
+    public double Right
+    {
+        get => _right;
+        internal set
         {
-            get => _right;
-            internal set
+            if (_right != value)
             {
-                if (_right != value)
-                {
-                    _right = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Right)));
-                }
+                _right = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Right)));
             }
         }
+    }
 
-        public double Bottom
+    public double Bottom
+    {
+        get => _bottom;
+        internal set
         {
-            get => _bottom;
-            internal set
+            if (_bottom != value)
             {
-                if (_bottom != value)
-                {
-                    _bottom = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Bottom)));
-                }
+                _bottom = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Bottom)));
             }
         }
+    }
 
-        public double Footer
+    public double Footer
+    {
+        get => _footer;
+        internal set
         {
-            get => _footer;
-            internal set
+            if (_footer != value)
             {
-                if (_footer != value)
-                {
-                    _footer = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Footer)));
-                }
+                _footer = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Footer)));
             }
         }
+    }
 
-        public bool IsBooted
+    public bool IsBooted
+    {
+        get => _isBooted;
+        internal set
         {
-            get => _isBooted;
-            internal set
+            if (_isBooted != value)
             {
-                if (_isBooted != value)
-                {
-                    _isBooted = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBooted)));
-                }
+                _isBooted = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsBooted)));
             }
         }
+    }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public void Update(TargetProp prop, double value)
+    {
+        switch (prop)
+        {
+            case TargetProp.Bar:
+                Bar = value;
+                break;
+            case TargetProp.Top:
+                Top = value;
+                break;
+            case TargetProp.Right:
+                Right = value;
+                break;
+            case TargetProp.Bottom:
+                Bottom = value;
+                break;
+            case TargetProp.Left:
+                Left = value;
+                break;
+            case TargetProp.Footer:
+                Footer = value;
+                break;
+            case TargetProp.InsetFooter:
+                InsetFooter = value;
+                break;
+            case TargetProp.Unset:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(prop), prop, null);
+        }
     }
 }
