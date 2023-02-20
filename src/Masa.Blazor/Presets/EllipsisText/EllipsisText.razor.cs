@@ -5,6 +5,10 @@ public partial class EllipsisText : IAsyncDisposable
 {
     [Inject] private IJSRuntime Js { get; set; } = null!;
 
+    [Parameter] public string? Class { get; set; }
+
+    [Parameter] public string? Style { get; set; }
+
     [Parameter] public bool Bottom { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -43,6 +47,8 @@ public partial class EllipsisText : IAsyncDisposable
 
     [Parameter] public RenderFragment<ActivatorRefProps>? ActivatorContent { get; set; }
 
+    [Parameter] public int Rows { get; set; }
+
     private bool _isDisabled;
 
     private ElementReference _spanReference;
@@ -54,6 +60,10 @@ public partial class EllipsisText : IAsyncDisposable
     private DotNetObjectReference<EllipsisText>? _selfReference;
 
     private ActivatorRefProps? _activatorRefProps;
+
+    private string ComputedClass => Rows > 0 ? "m-ellipsis-text multi-rows" : "m-ellipsis-text";
+
+    private string ComputedStyle => Rows > 0 ? $"-webkit-line-clamp: {Rows};" : "";
 
     protected override void OnParametersSet()
     {

@@ -23,8 +23,8 @@
     <ActivatorContent>
         @if (ActivatorContent is null)
         {
-            <span class="d-inline-block text-truncate"
-                  style="width: 100%; cursor: auto; vertical-align: top"
+            <span class="@ComputedClass @Class"
+                  style="@ComputedStyle @Style"
                   @ref="_spanReference"
                   @attributes="@context.Attrs">
                 @ChildContent

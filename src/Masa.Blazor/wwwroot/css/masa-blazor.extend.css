@@ -734,6 +734,23 @@ input[type=number] {
 
 /* ellipsis text */
 
+.m-ellipsis-text {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    cursor: auto;
+    vertical-align: top;
+}
+
+.m-ellipsis-text.multi-rows {
+    display: -moz-box;
+    display: -webkit-box;
+    -moz-box-orient: horizontal;
+    -webkit-box-orient: horizontal;
+}
+
 .m-ellipsis-text__tooltip {
     background: rgba(97,97,97,.9);
     color: #FFF;
