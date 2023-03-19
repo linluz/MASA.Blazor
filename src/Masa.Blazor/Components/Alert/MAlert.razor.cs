@@ -1,9 +1,61 @@
-﻿namespace Masa.Blazor
+﻿#nullable enable
+
+namespace Masa.Blazor
 {
-    public class MAlert : BAlert, IThemeable
+    public partial class MAlert : BDomComponentBase, IThemeable
     {
         [Parameter]
-        public StringBoolean Icon { get; set; }
+        public string? Transition { get; set; }
+
+        [Parameter]
+        public Borders Border { get; set; }
+
+        [Parameter]
+        [EditorRequired]
+        public RenderFragment? ChildContent { get; set; }
+
+        [ApiDefaultValue("mdi-close-circle")]
+        [Parameter]
+        public string CloseIcon { get; set; } = "mdi-close-circle";
+
+        [Parameter]
+        public virtual string CloseLabel { get; set; } = "Close";
+
+        [Parameter]
+        public string? Color { get; set; }
+
+        [Parameter]
+        public virtual bool Dismissible { get; set; }
+
+        [Parameter]
+        public string Tag { get; set; } = "div";
+
+        [Parameter]
+        public string? Title { get; set; }
+
+        [Parameter]
+        public RenderFragment? TitleContent { get; set; }
+
+        [Parameter]
+        public AlertTypes Type { get; set; }
+
+        [Parameter]
+        public bool Value { get; set; } = true;
+
+        [Parameter]
+        public EventCallback<bool> ValueChanged { get; set; }
+
+        [Parameter]
+        public bool Dark { get; set; }
+
+        [Parameter]
+        public bool Light { get; set; }
+
+        [CascadingParameter(Name = "IsDark")]
+        public bool CascadingIsDark { get; set; }
+
+        [Parameter]
+        public StringBoolean? Icon { get; set; }
 
         [Parameter]
         public bool ColoredBorder { get; set; }
@@ -12,7 +64,7 @@
         public bool Dense { get; set; }
 
         [Parameter]
-        public StringNumber Elevation { get; set; }
+        public StringNumber? Elevation { get; set; }
 
         [Parameter]
         public bool Outlined { get; set; }
@@ -21,7 +73,7 @@
         public bool Prominent { get; set; }
 
         [Parameter]
-        public StringBoolean Rounded { get; set; }
+        public StringBoolean? Rounded { get; set; }
 
         [Parameter]
         public bool Shaped { get; set; }
@@ -33,28 +85,50 @@
         public bool Tile { get; set; }
 
         [Parameter]
-        public StringNumber Height { get; set; }
+        public StringNumber? Height { get; set; }
 
         [Parameter]
-        public StringNumber MaxHeight { get; set; }
+        public StringNumber? MaxHeight { get; set; }
 
         [Parameter]
-        public StringNumber MaxWidth { get; set; }
+        public StringNumber? MaxWidth { get; set; }
 
         [Parameter]
-        public StringNumber MinHeight { get; set; }
+        public StringNumber? MinHeight { get; set; }
 
         [Parameter]
-        public StringNumber MinWidth { get; set; }
+        public StringNumber? MinWidth { get; set; }
 
         [Parameter]
-        public StringNumber Width { get; set; }
+        public StringNumber? Width { get; set; }
+
+        public RenderFragment? IconContent { get; protected set; }
+
+        public bool IsShowIcon { get; protected set; }
 
         private string ComputedType => Type != AlertTypes.None ? Type.ToString().ToLower() : "";
 
         private string ComputedColor => Color ?? ComputedType;
 
-        private (bool, RenderFragment) ComputedIcon()
+        public bool IsDark
+        {
+            get
+            {
+                if (Dark)
+                {
+                    return true;
+                }
+
+                if (Light)
+                {
+                    return false;
+                }
+
+                return CascadingIsDark;
+            }
+        }
+
+        private(bool, RenderFragment?) ComputedIcon()
         {
             if (Icon != null && Icon.IsT1 && Icon.AsT1 == false) return (false, null);
 
@@ -178,6 +252,19 @@
                 Borders.None => "",
                 _ => throw new ArgumentOutOfRangeException(nameof(Border))
             };
+        }
+
+        public async Task HandleOnDismiss(MouseEventArgs args)
+        {
+            Value = false;
+            await ValueChanged.InvokeAsync(false);
+        }
+
+        [ApiPublicMethod]
+        public async Task ToggleAsync()
+        {
+            Value = !Value;
+            await ValueChanged.InvokeAsync(Value);
         }
     }
 }

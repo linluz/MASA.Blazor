@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-
-namespace Masa.Blazor
+﻿namespace Masa.Blazor
 {
     public class MTimePickerTitle : BTimePickerTitle, ITimePickerTitle
     {

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.Web;
-
-namespace Masa.Blazor
+﻿namespace Masa.Blazor
 {
     public partial class MDatePickerTable<TValue> : BDatePickerTable, IThemeable, IDatePickerTable
     {

@@ -1,0 +1,25 @@
+﻿@namespace Masa.Blazor
+@inherits BDomComponentBase
+
+<CascadingValue Value="IsDark" Name="IsDark">
+    @if (Transition != null)
+    {
+        <Transition Name="@Transition">
+            <ShowTransitionElement Value="Value" Tag="@Tag" role="alert" class="@CssProvider.GetClass()" style="@CssProvider.GetStyle()" id="@Id">
+                @RenderPart(typeof(BAlertWrapper<>))
+            </ShowTransitionElement>
+        </Transition>
+    }
+    else
+    {
+        <Element Tag="@Tag" role="alert" class="@CssProvider.GetClass()" style="@CssProvider.GetStyle()" id="@Id">
+            @RenderPart(typeof(BAlertWrapper<>))
+        </Element>
+    }
+</CascadingValue>
+
+@code {
+
+    
+
+}

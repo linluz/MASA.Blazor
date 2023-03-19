@@ -9,4 +9,5 @@ global using System.Runtime.Serialization;
 global using System.Globalization;
 global using System.Text.RegularExpressions;
 global using System.Text;
+global using Microsoft.AspNetCore.Components.Web;
 global using OneOf;
