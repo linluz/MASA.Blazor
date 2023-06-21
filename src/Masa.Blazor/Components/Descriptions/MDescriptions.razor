@@ -1,68 +1,55 @@
 ﻿@namespace Masa.Blazor
+@using BlazorComponent.Abstracts
 @inherits BDomComponentBase
 
-<div class="@CssProvider.GetClass()"
-     style="@CssProvider.GetStyle()"
+<div class="@_bem.GenValue(Dense, Bordered).AddTheme(IsDark).Append(Class)"
+     style="@Style"
      @ref="Ref">
     <CascadingValue Value="IsDark" Name="IsDark">
         @if (HasHeader)
         {
-            <div class="@CssProvider.GetClass("header")">
-                @RenderContentFragment("header__title", Title, TitleContent)
-                @RenderContentFragment("header__actions", ActionsContent)
+            <div class="@_bem.Extend("header")">
+                @ContentFragment(_bem.Extend("header").Gen("title"), Title, TitleContent)
+                @ContentFragment(_bem.Extend("header").Gen("actions"), ActionsContent)
             </div>
         }
 
-        <div class="@CssProvider.GetClass("view")">
+        <div class="@_bem.Extend("view")">
             <table>
                 <tbody>
                 @foreach (var row in Rows)
                 {
                     @if (Vertical)
                     {
-                        <tr class="@CssProvider.GetClass("row")">
+                        <tr class="@_bem.Extend("row")">
                             @foreach (var cell in row)
                             {
                                 @if (Bordered)
                                 {
-                                    <th class="@CssProvider.GetClass("item__label") @cell.LabelClass"
-                                        style="@CssProvider.GetStyle("item__label") @cell.LabelStyle"
-                                        colspan="@cell.Span">
-                                        @cell.Label
-                                    </th>
+                                    @ThLabel(cell, cell.Span)
                                 }
                                 else
                                 {
-                                    <th class="@CssProvider.GetClass("item")" colspan="@cell.Span">
-                                        <div class="@CssProvider.GetClass("item-container")">
-                                            <span class="@CssProvider.GetClass("item-container__label") @cell.LabelClass"
-                                                  style="@CssProvider.GetStyle("item-container__label") @cell.LabelStyle">
-                                                @cell.Label
-                                            </span>
+                                    <th class="@_bem.Extend("item")" colspan="@cell.Span">
+                                        <div class="@_bem.Extend("item-container")">
+                                            @ContainerLabel(cell)
                                         </div>
                                     </th>
                                 }
                             }
                         </tr>
-                        <tr class="@CssProvider.GetClass("row")">
+                        <tr class="@_bem.Extend("row")">
                             @foreach (var cell in row)
                             {
                                 @if (Bordered)
                                 {
-                                    <td class="@CssProvider.GetClass("item__content") @cell.Class"
-                                        style="@CssProvider.GetStyle("item__content") @cell.Style"
-                                        colspan="@cell.Span">
-                                        @cell.ChildContent
-                                    </td>
+                                    @TdContent(cell, cell.Span)
                                 }
                                 else
                                 {
-                                    <td class="@CssProvider.GetClass("item")" colspan="@cell.Span">
-                                        <div class="@CssProvider.GetClass("item-container")">
-                                            <span class="@CssProvider.GetClass("item-container__content") @cell.Class"
-                                                  style="@CssProvider.GetStyle("item-container__content") @cell.Style">
-                                                @cell.ChildContent
-                                            </span>
+                                    <td class="@_bem.Extend("item")" colspan="@cell.Span">
+                                        <div class="@_bem.Extend("item-container")">
+                                            @ContainerContent(cell)
                                         </div>
                                     </td>
                                 }
@@ -71,7 +58,7 @@
                     }
                     else
                     {
-                        <tr class="@CssProvider.GetClass("row")">
+                        <tr class="@_bem.Extend("row")">
                             @foreach (var cell in row)
                             {
                                 @if (Bordered)
@@ -79,29 +66,16 @@
                                     var thSpan = 1;
                                     var tdSpan = cell.Span * 2 - 1;
 
-                                    <th class="@CssProvider.GetClass("item__label") @cell.LabelClass"
-                                        style="@CssProvider.GetStyle("item__label") @cell.LabelStyle"
-                                        colspan="@thSpan">
-                                        @cell.Label
-                                    </th>
-                                    <td class="@CssProvider.GetClass("item__content") @cell.Class"
-                                        style="@CssProvider.GetStyle("item__content") @cell.Style"
-                                        colspan="@tdSpan">
-                                        @cell.ChildContent
-                                    </td>
+                                    @ThLabel(cell, thSpan)
+
+                                    @TdContent(cell, tdSpan)
                                 }
                                 else
                                 {
-                                    <td class="@CssProvider.GetClass("item")" colspan="@cell.Span">
-                                        <div class="@CssProvider.GetClass("item-container")">
-                                            <span class="@CssProvider.GetClass("item-container__label") @cell.LabelClass"
-                                                  style="@CssProvider.GetStyle("item-container__label") @cell.LabelStyle">
-                                                @cell.Label
-                                            </span>
-                                            <span class="@CssProvider.GetClass("item-container__content") @cell.Class"
-                                                  style="@CssProvider.GetStyle("item-container__content") @cell.Style">
-                                                @cell.ChildContent
-                                            </span>
+                                    <td class="@_bem.Extend("item")" colspan="@cell.Span">
+                                        <div class="@_bem.Extend("item-container")">
+                                            @ContainerLabel(cell)
+                                            @ContainerContent(cell)
                                         </div>
                                     </td>
                                 }
@@ -121,24 +95,58 @@
 
 @code {
 
-    private RenderFragment RenderContentFragment(string name, RenderFragment? contentFragment = null) => __builder =>
+    private RenderFragment TdContent(DescriptionsGroupItem cell, int colspan) => __builder =>
+    {
+        <td class="@_bem.Extend("item").GenValue("content").Append(ContentClass, cell.Class)"
+            style="@ContentStyle @cell.Style"
+            colspan="@colspan">
+            @cell.ChildContent
+        </td>
+    };
+
+    private RenderFragment ThLabel(DescriptionsGroupItem cell, int colspan) => __builder =>
+    {
+        <th class="@_bem.Extend("item").GenValue("label").Append(LabelClass, cell.LabelClass)"
+            style="@LabelStyle @cell.LabelStyle"
+            colspan="@colspan">
+            @cell.Label
+        </th>
+    };
+
+    private RenderFragment ContainerLabel(DescriptionsGroupItem cell) => __builder =>
+    {
+        <span class="@_bem.Extend("item-container").GenValue("label", !Colon, "no-colon").Append(LabelClass, cell.LabelClass)"
+              style="@LabelStyle @cell.LabelStyle">
+            @cell.Label
+        </span>
+    };
+
+    private RenderFragment ContainerContent(DescriptionsGroupItem cell) => __builder =>
+    {
+        <span class="@_bem.Extend("item-container").GenValue("content").Append(ContentClass, cell.Class)"
+              style="@ContentStyle @cell.Style">
+            @cell.ChildContent
+        </span>
+    };
+
+    private RenderFragment ContentFragment(string className, RenderFragment? contentFragment = null) => __builder =>
     {
         @if (contentFragment != null)
         {
-            <div class="@CssProvider.GetClass(name)">
+            <div class="@className">
                 @contentFragment
             </div>
         }
     };
 
-    private RenderFragment RenderContentFragment(string name, string? content, RenderFragment? contentFragment = null) => __builder =>
+    private RenderFragment ContentFragment(string className, string? content, RenderFragment? contentFragment = null) => __builder =>
     {
         var hasContent = !string.IsNullOrWhiteSpace(content);
         var hasContentFragment = contentFragment != null;
 
         @if (hasContent || hasContentFragment)
         {
-            <div class="@CssProvider.GetClass(name)">
+            <div class="@className">
                 @if (hasContentFragment)
                 {
                     @contentFragment

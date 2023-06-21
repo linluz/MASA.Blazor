@@ -1,4 +1,6 @@
-﻿namespace Masa.Blazor;
+﻿using BlazorComponent.Abstracts;
+
+namespace Masa.Blazor;
 
 public partial class MDescriptions : BDomComponentBase, IThemeable
 {
@@ -188,35 +190,7 @@ public partial class MDescriptions : BDomComponentBase, IThemeable
         await InvokeStateHasChangedAsync();
     }
 
-    protected override void SetComponentClass()
-    {
-        base.SetComponentClass();
-
-        CssProvider
-            .UseBaseCssName("m-descriptions")
-            .Apply(cssBuilder =>
-            {
-                cssBuilder.AddModifierIf("dense", () => Dense)
-                          .AddModifierIf("bordered", () => Bordered)
-                          .AddTheme(IsDark);
-            })
-            .Apply("header")
-            .Apply("header__title")
-            .Apply("header__actions")
-            .Apply("view")
-            .Apply("row")
-            .Apply("item")
-            .Apply("item__label", cssBuilder => { cssBuilder.Add(LabelClass); }, styleBuilder => { styleBuilder.Add(LabelStyle); })
-            .Apply("item__content", cssBuilder => { cssBuilder.Add(ContentClass); }, styleBuilder => { styleBuilder.Add(ContentStyle); })
-            .Apply("item-container")
-            .Apply("item-container__label", cssBuilder =>
-            {
-                cssBuilder
-                    .AddModifierIf("no-colon", () => !Colon)
-                    .Add(LabelClass);
-            }, styleBuilder => { styleBuilder.Add(LabelStyle); })
-            .Apply("item-container__content", cssBuilder => { cssBuilder.Add(ContentClass); }, styleBuilder => { styleBuilder.Add(ContentStyle); });
-    }
+    private Bem _bem = new("m-descriptions");
 
     internal void Register(IDescriptionsItem descriptionsItem)
     {
