@@ -49,6 +49,8 @@ public partial class MDescriptions : BDomComponentBase, IThemeable
     [Parameter] public bool Light { get; set; }
 
     private readonly List<IDescriptionsItem> _descriptionItems = new();
+    
+    private Bem _bem = new("m-descriptions");
 
     public bool IsDark
     {
@@ -182,15 +184,13 @@ public partial class MDescriptions : BDomComponentBase, IThemeable
     {
         base.OnInitialized();
 
-        MasaBlazor.Breakpoint.OnUpdate += BreakpointOnOnUpdate;
+        MasaBlazor.BreakpointChanged += BreakpointOnOnUpdate;
     }
 
     private async void BreakpointOnOnUpdate(object? sender, BreakpointChangedEventArgs e)
     {
         await InvokeStateHasChangedAsync();
     }
-
-    private Bem _bem = new("m-descriptions");
 
     internal void Register(IDescriptionsItem descriptionsItem)
     {
@@ -202,6 +202,6 @@ public partial class MDescriptions : BDomComponentBase, IThemeable
     {
         base.Dispose(disposing);
 
-        MasaBlazor.Breakpoint.OnUpdate -= BreakpointOnOnUpdate;
+        MasaBlazor.BreakpointChanged -= BreakpointOnOnUpdate;
     }
 }
