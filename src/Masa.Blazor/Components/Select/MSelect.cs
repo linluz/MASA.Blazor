@@ -1039,7 +1039,7 @@ public class MSelect<TItem, TItemValue, TValue> : MTextField<TValue>, ISelect<TI
         return func;
     }
 
-    protected async Task SetValue(TValue value)
+    protected virtual async Task SetValue(TValue value)
     {
         if (!EqualityComparer<TValue>.Default.Equals(InternalValue, value))
         {

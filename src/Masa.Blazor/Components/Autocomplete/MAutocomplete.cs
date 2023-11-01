@@ -252,7 +252,12 @@ namespace Masa.Blazor
                 await base.HandleOnKeyDownAsync(args);
             }
 
-            await ChangeSelectedIndex(keyCode);
+            await HandleOnKeyDownNextAsync(args);
+        }
+
+        protected virtual async Task HandleOnKeyDownNextAsync(KeyboardEventArgs args)
+        {
+            await ChangeSelectedIndex(args.Code);
         }
 
         protected override async Task OnTabDown(KeyboardEventArgs args)
