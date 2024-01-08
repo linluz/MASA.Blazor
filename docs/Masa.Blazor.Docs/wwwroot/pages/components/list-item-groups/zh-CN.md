@@ -25,7 +25,7 @@ related:
 
 #### 必填项
 
-使用`Multiple`属性必须至少选定一项。
+使用`Mandatory`属性必须至少选定一项。
 
 <masa-example file="Examples.components.list_item_groups.Mandatory"></masa-example>
 
@@ -39,7 +39,7 @@ related:
 
 #### 扁平列表
 
-您可以一次选择多个项目。
+组件中选择时，项目不会发生变化。
 
 <masa-example file="Examples.components.list_item_groups.FlatList"></masa-example>
 
